@@ -2,6 +2,8 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { Eye, EyeOff, Loader2, LogIn } from "lucide-react";
 import ResultsHeader from "./ResultsHeader";
 import ProfileHeroSection from "./ProfileHeroSection";
 import IQSection from "./IQSection";
@@ -27,6 +29,145 @@ interface AssessmentResults {
   completedAt?: string;
 }
 
+type LoginFormData = {
+  email: string;
+  password: string;
+};
+
+function InlineLoginForm({ onSuccess }: { onSuccess: () => void }) {
+  const router = useRouter();
+  const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
+
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm<LoginFormData>();
+
+  const fillDemoAccount = () => {
+    setValue("email", "demo@mergejil.mn");
+    setValue("password", "demo1234");
+  };
+
+  const onSubmit = async (data: LoginFormData) => {
+    setIsLoading(true);
+    setErrorMsg("");
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: data.email, password: data.password }),
+      });
+      const json = await res.json();
+      if (!res.ok) {
+        setErrorMsg(json.error || "Нэвтрэхэд алдаа гарлаа");
+      } else {
+        onSuccess();
+        router.refresh();
+      }
+    } catch {
+      setErrorMsg("Сүлжээний алдаа гарлаа. Дахин оролдоно уу.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)} className="w-full">
+      {errorMsg && (
+        <p className="mb-3 text-xs text-red-500 text-center">{errorMsg}</p>
+      )}
+
+      {/* Email */}
+      <div className="mb-3">
+        <label htmlFor="gate-email" className="block text-sm font-semibold text-foreground mb-1.5">
+          И-мэйл хаяг
+        </label>
+        <input
+          id="gate-email"
+          type="email"
+          autoComplete="email"
+          placeholder="та@example.mn"
+          className={`w-full px-4 py-3 border rounded-xl text-sm bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring/30 focus:border-primary transition-all duration-150 ${
+            errors.email ? "border-red-400" : "border-input"
+          }`}
+          {...register("email", {
+            required: "И-мэйл хаяг оруулна уу",
+            pattern: {
+              value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+              message: "Зөв и-мэйл хаяг оруулна уу",
+            },
+          })}
+        />
+        {errors.email && (
+          <p className="mt-1 text-xs text-red-500">{errors.email.message}</p>
+        )}
+      </div>
+
+      {/* Password */}
+      <div className="mb-5">
+        <label htmlFor="gate-password" className="block text-sm font-semibold text-foreground mb-1.5">
+          Нууц үг
+        </label>
+        <div className="relative">
+          <input
+            id="gate-password"
+            type={showPassword ? "text" : "password"}
+            autoComplete="current-password"
+            placeholder="••••••••"
+            className={`w-full px-4 py-3 pr-12 border rounded-xl text-sm bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring/30 focus:border-primary transition-all duration-150 ${
+              errors.password ? "border-red-400" : "border-input"
+            }`}
+            {...register("password", { required: "Нууц үг оруулна уу" })}
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+            aria-label={showPassword ? "Нууц үг нуух" : "Нууц үг харуулах"}
+          >
+            {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+          </button>
+        </div>
+        {errors.password && (
+          <p className="mt-1 text-xs text-red-500">{errors.password.message}</p>
+        )}
+      </div>
+
+      {/* Submit */}
+      <button
+        type="submit"
+        disabled={isLoading}
+        className="w-full py-3.5 px-6 gradient-primary text-white font-semibold text-sm rounded-xl hover:opacity-90 active:scale-[0.98] transition-all duration-150 flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
+        style={{ minHeight: "52px" }}
+      >
+        {isLoading ? (
+          <Loader2 size={18} className="animate-spin" />
+        ) : (
+          <>
+            <LogIn size={18} />
+            Нэвтрэх
+          </>
+        )}
+      </button>
+
+      {/* Demo account link */}
+      <p className="text-center text-sm text-muted-foreground mt-3">
+        <button
+          type="button"
+          onClick={fillDemoAccount}
+          className="text-primary font-normal hover:underline"
+        >
+          Demo account
+        </button>
+      </p>
+    </form>
+  );
+}
+
 export default function ResultsPageClient() {
   const router = useRouter();
   const [authChecked, setAuthChecked] = useState(false);
@@ -37,29 +178,29 @@ export default function ResultsPageClient() {
     "profile" | "professions" | "education" | "roadmap"
   >("profile");
 
-  useEffect(() => {
-    async function checkAuth() {
-      try {
-        const res = await fetch("/api/auth/me");
-        if (res.ok) {
-          const data = await res.json();
-          setIsAuthenticated(true);
-          setSessionUser(data.user);
-          // Fetch assessment results from DB
-          const resultsRes = await fetch("/api/assessment/results");
-          if (resultsRes.ok) {
-            const resultsData = await resultsRes.json();
-            setAssessmentResults(resultsData);
-          }
-        } else {
-          setIsAuthenticated(false);
+  const checkAuth = async () => {
+    try {
+      const res = await fetch("/api/auth/me");
+      if (res.ok) {
+        const data = await res.json();
+        setIsAuthenticated(true);
+        setSessionUser(data.user);
+        const resultsRes = await fetch("/api/assessment/results");
+        if (resultsRes.ok) {
+          const resultsData = await resultsRes.json();
+          setAssessmentResults(resultsData);
         }
-      } catch {
+      } else {
         setIsAuthenticated(false);
-      } finally {
-        setAuthChecked(true);
       }
+    } catch {
+      setIsAuthenticated(false);
+    } finally {
+      setAuthChecked(true);
     }
+  };
+
+  useEffect(() => {
     checkAuth();
   }, []);
 
@@ -91,10 +232,10 @@ export default function ResultsPageClient() {
           <h1 className="text-2xl font-bold text-foreground mb-2">
             Үр дүнг харахын тулд нэвтэрнэ үү
           </h1>
-          <p className="text-muted-foreground text-sm mb-8 leading-relaxed">
+          <p className="text-muted-foreground text-sm mb-6 leading-relaxed">
             Таны MBTI, IQ болон ур чадварын үр дүн бэлэн байна. Харахын тулд эхлээд нэвтэрнэ үү эсвэл бүртгүүлнэ үү.
           </p>
-          <div className="relative mb-8 rounded-2xl overflow-hidden border border-border">
+          <div className="relative mb-6 rounded-2xl overflow-hidden border border-border">
             <div className="p-6 bg-card space-y-3 blur-sm select-none pointer-events-none" aria-hidden="true">
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 rounded-xl bg-primary/20" />
@@ -116,20 +257,18 @@ export default function ResultsPageClient() {
               </span>
             </div>
           </div>
-          <div className="flex flex-col gap-3">
-            <button
-              onClick={() => router.push("/sign-up-login-screen")}
-              className="w-full py-3.5 px-6 gradient-primary text-white font-semibold text-sm rounded-xl hover:opacity-90 active:scale-[0.98] transition-all duration-150"
-            >
-              Нэвтрэх / Бүртгүүлэх
-            </button>
-            <button
-              onClick={() => router.push("/career-assessment")}
-              className="w-full py-3 px-6 border border-border text-muted-foreground font-medium text-sm rounded-xl hover:bg-muted transition-all duration-150"
-            >
-              ← Тестэд буцах
-            </button>
+
+          {/* Inline login form */}
+          <div className="bg-card border border-border rounded-2xl p-6 text-left mb-4">
+            <InlineLoginForm onSuccess={checkAuth} />
           </div>
+
+          <button
+            onClick={() => router.push("/career-assessment")}
+            className="w-full py-3 px-6 border border-border text-muted-foreground font-medium text-sm rounded-xl hover:bg-muted transition-all duration-150"
+          >
+            ← Тестэд буцах
+          </button>
         </div>
       </div>
     );

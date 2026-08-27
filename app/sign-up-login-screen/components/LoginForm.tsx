@@ -24,8 +24,14 @@ export default function LoginForm({
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm<LoginFormData>({ defaultValues: { remember: false } });
+
+  const fillDemoAccount = () => {
+    setValue("email", "demo@mergejil.mn");
+    setValue("password", "demo1234");
+  };
 
   const onSubmit = async (data: LoginFormData) => {
     setIsLoading(true);
@@ -197,6 +203,17 @@ export default function LoginForm({
           </>
         )}
       </button>
+
+      {/* Demo account button */}
+      <p className="text-center text-sm text-muted-foreground mt-3">
+        <button
+          type="button"
+          onClick={fillDemoAccount}
+          className="text-primary font-normal hover:underline"
+        >
+          Demo account
+        </button>
+      </p>
 
       <p className="text-center text-sm text-muted-foreground mt-4">
         Бүртгэл байхгүй юу?{" "}
