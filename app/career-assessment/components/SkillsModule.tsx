@@ -12,8 +12,8 @@ export default function SkillsModule({
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const question = skillsQuestions[currentIndex];
-  const isAnswered = !!answers[question.id];
-  const currentCat = SKILLS_CATEGORIES.find((c) => c.key === question.category);
+  const isAnswered = question ? !!answers[question.id] : false;
+  const currentCat = question ? SKILLS_CATEGORIES.find((c) => c.key === question.category) : undefined;
 
   const handleSelect = (optionId: string) => {
     const newAnswers = { ...answers, [question.id]: optionId };
@@ -40,6 +40,7 @@ export default function SkillsModule({
 
   return (
     <div className="flex-1 flex flex-col items-center justify-start py-8 px-4">
+      {!question ? null : (
       <div className="w-full max-w-2xl">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
@@ -207,6 +208,7 @@ export default function SkillsModule({
           </button>
         </div>
       </div>
+      )}
     </div>
   );
 }

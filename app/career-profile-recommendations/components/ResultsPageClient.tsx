@@ -34,8 +34,21 @@ type LoginFormData = {
   password: string;
 };
 
-function InlineLoginForm({ onSuccess }: { onSuccess: () => void }) {
-  const router = useRouter();
+// ── Read results from localStorage (works without a database) ─────────────────
+function readLocalResults(): AssessmentResults | null {
+  try {
+    const raw = localStorage.getItem("assessmentResults");
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (parsed && parsed.hasResults) return parsed as AssessmentResults;
+    return null;
+  } catch {
+    return null;
+  }
+}
+// ─────────────────────────────────────────────────────────────────────────────
+
+function InlineLoginForm({ onSuccess }: { onSuccess: (user: SessionUser) => void }) {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
@@ -65,8 +78,12 @@ function InlineLoginForm({ onSuccess }: { onSuccess: () => void }) {
       if (!res.ok) {
         setErrorMsg(json.error || "Нэвтрэхэд алдаа гарлаа");
       } else {
-        onSuccess();
-        router.refresh();
+        onSuccess({
+          userId: json.user?.id ?? 0,
+          email: json.user?.email ?? data.email,
+          firstName: json.user?.firstName,
+          lastName: json.user?.lastName,
+        });
       }
     } catch {
       setErrorMsg("Сүлжээний алдаа гарлаа. Дахин оролдоно уу.");
@@ -178,6 +195,56 @@ export default function ResultsPageClient() {
     "profile" | "professions" | "education" | "roadmap"
   >("profile");
 
+  const loadResults = async (userId?: number) => {
+    // 1. Try localStorage first — always available, no DB needed
+    const localResults = readLocalResults();
+    if (localResults) {
+      setAssessmentResults(localResults);
+    }
+
+    // 2. Try DB (best-effort — may fail if DATABASE_URL is not set)
+    try {
+      const resultsRes = await fetch("/api/assessment/results");
+      if (resultsRes.ok) {
+        const data = await resultsRes.json();
+        if (data.hasResults) {
+          setAssessmentResults(data);
+          // Sync DB results back to localStorage for consistency
+          try { localStorage.setItem("assessmentResults", JSON.stringify(data)); } catch { /* ignore */ }
+        }
+      }
+    } catch {
+      // DB unavailable — localStorage results already set above
+    }
+
+    // 3. If we have pending raw answers and are now authenticated, try to submit them
+    try {
+      const pending = localStorage.getItem("pendingAssessmentAnswers");
+      if (pending && userId) {
+        const answers = JSON.parse(pending);
+        const submitRes = await fetch("/api/assessment/results", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(answers),
+        });
+        if (submitRes.ok) {
+          localStorage.removeItem("pendingAssessmentAnswers");
+          // Refresh from DB after successful submit
+          const refreshRes = await fetch("/api/assessment/results");
+          if (refreshRes.ok) {
+            const refreshData = await refreshRes.json();
+            if (refreshData.hasResults) {
+              setAssessmentResults(refreshData);
+              try { localStorage.setItem("assessmentResults", JSON.stringify(refreshData)); } catch { /* ignore */ }
+            }
+          }
+        }
+      }
+    } catch {
+      // ignore — localStorage results are already displayed
+    }
+  };
+
   const checkAuth = async () => {
     try {
       const res = await fetch("/api/auth/me");
@@ -185,11 +252,7 @@ export default function ResultsPageClient() {
         const data = await res.json();
         setIsAuthenticated(true);
         setSessionUser(data.user);
-        const resultsRes = await fetch("/api/assessment/results");
-        if (resultsRes.ok) {
-          const resultsData = await resultsRes.json();
-          setAssessmentResults(resultsData);
-        }
+        await loadResults(data.user?.userId);
       } else {
         setIsAuthenticated(false);
       }
@@ -200,8 +263,15 @@ export default function ResultsPageClient() {
     }
   };
 
+  const handleLoginSuccess = async (user: SessionUser) => {
+    setSessionUser(user);
+    setIsAuthenticated(true);
+    await loadResults(user.userId);
+  };
+
   useEffect(() => {
     checkAuth();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const tabs = [
@@ -260,7 +330,7 @@ export default function ResultsPageClient() {
 
           {/* Inline login form */}
           <div className="bg-card border border-border rounded-2xl p-6 text-left mb-4">
-            <InlineLoginForm onSuccess={checkAuth} />
+            <InlineLoginForm onSuccess={handleLoginSuccess} />
           </div>
 
           <button
@@ -274,7 +344,7 @@ export default function ResultsPageClient() {
     );
   }
 
-  // Build profile data merging DB results with static profile data
+  // Build profile data merging results (localStorage or DB) with static profile data
   const profileData = {
     ...PROFILE_DATA,
     user: {
