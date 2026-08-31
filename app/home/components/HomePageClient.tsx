@@ -87,6 +87,48 @@ const TESTIMONIALS = [
   },
 ];
 
+const USER_TYPES = [
+  {
+    id: "ut-confirm",
+    emoji: "🎯",
+    tag: "Шийдвэрлэсэн",
+    tagColor: "bg-blue-100 text-blue-700",
+    title: "Мэргэжлээ сонгосон ч баталгаажуулахыг хүсч байна уу?",
+    desc: "Та аль хэдийн нэг мэргэжлийг сонирхож байна. Гэхдээ энэ нь үнэхээр таны хувийн шинж, чадвартай нийцэж байна уу? Бидний тест таны сонголтыг шинжлэлийн үндэслэлтэйгээр баталгаажуулна.",
+    highlight: "Таны сонголт зөв эсэхийг шалгана",
+    highlightColor: "text-blue-600",
+    span: "md:col-span-1",
+    accent: "border-blue-200",
+    bg: "bg-gradient-to-br from-blue-50/60 to-white",
+  },
+  {
+    id: "ut-lost",
+    emoji: "🧭",
+    tag: "Чиглэлгүй",
+    tagColor: "bg-amber-100 text-amber-700",
+    title: "Юу болохоо мэдэхгүй, хаанаас эхлэхээ ч мэдэхгүй байна уу?",
+    desc: "Олон сонголтын дунд төөрч, аль нь өөртөө тохирохыг мэдэхгүй байгаа хүмүүст зориулсан. Бидний үнэлгээ таны хувийн онцлог, чадварт тулгуурлан хамгийн тохиромжтой замыг заана.",
+    highlight: "Таны хувийн замыг олоход тусална",
+    highlightColor: "text-amber-600",
+    span: "md:col-span-1 md:row-span-1",
+    accent: "border-amber-200",
+    bg: "bg-gradient-to-br from-amber-50/60 to-white",
+  },
+  {
+    id: "ut-potential",
+    emoji: "💡",
+    tag: "Нуугдмал авьяас",
+    tagColor: "bg-emerald-100 text-emerald-700",
+    title: "Ухаалаг, чадвартай ч өөрийгөө дутуу үнэлдэг үү?",
+    desc: "Зарим хүмүүс гайхалтай авьяас чадвартай байдаг ч өөрийгөө хэр чадвартайг мэдэхгүй байдаг. Бидний IQ болон ур чадварын тест таны нуугдмал боломжийг илрүүлж, таны үнэ цэнийг харуулна.",
+    highlight: "Таны нуугдмал чадварыг илрүүлнэ",
+    highlightColor: "text-emerald-600",
+    span: "md:col-span-1",
+    accent: "border-emerald-200",
+    bg: "bg-gradient-to-br from-emerald-50/60 to-white",
+  },
+];
+
 type ProgressStatus = "completed" | "active" | "pending";
 
 function getModuleProgress(moduleKey: string, completedModules: string[]): ProgressStatus {
@@ -134,7 +176,6 @@ export default function HomePageClient() {
 
   useEffect(() => {
     setMounted(true);
-    // Read completed modules from localStorage (set by AssessmentPageClient)
     try {
       const stored = localStorage.getItem("completedModules");
       if (stored) {
@@ -165,6 +206,7 @@ export default function HomePageClient() {
               <span className="font-bold text-sm text-primary">Мэргэжил.мн</span>
             </div>
             <nav className="hidden md:flex items-center gap-6">
+              <a href="#who-is-this-for" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Хэнд зориулсан</a>
               <a href="#how-it-works" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Хэрхэн ажилладаг</a>
               <a href="#testimonials" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Сэтгэгдэл</a>
             </nav>
@@ -185,10 +227,10 @@ export default function HomePageClient() {
           </div>
         </div>
       </header>
+
       <main className="flex-1">
         {/* Hero */}
         <section className="gradient-hero relative overflow-hidden">
-          {/* Decorative blobs */}
           <div
             className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full pointer-events-none"
             style={{ background: "radial-gradient(circle, rgba(245,166,35,0.08) 0%, transparent 70%)", transform: "translate(20%, -20%)" }}
@@ -199,60 +241,74 @@ export default function HomePageClient() {
           />
 
           <div className="max-w-screen-xl mx-auto px-4 lg:px-8 py-20 lg:py-28 relative z-10">
-            <div className="max-w-3xl">
-              {/* Badge */}
-              <div className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-accent/20 border border-accent/30 rounded-full text-accent text-xs font-semibold mb-6">
-                <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
-                  <path d="M6 1L7.5 4.5L11 5L8.5 7.5L9 11L6 9.5L3 11L3.5 7.5L1 5L4.5 4.5L6 1Z" />
-                </svg>
-                Монголын #1 Карьер удирдамжийн платформ
-              </div>
-
-              <h1 className="text-white font-bold leading-tight mb-5" style={{ fontSize: "clamp(2rem, 5vw, 3.25rem)" }}>
-                Таны нуугдмал{" "}
-                <span className="text-accent">чадварыг</span>
-                <br />
-                илрүүлье
-              </h1>
-
-              <p className="text-white/70 text-lg leading-relaxed mb-8 max-w-xl">
-                MBTI хувь хүний онцлог, IQ танин мэдэхүйн чадвар, практик ур чадварыг нэгтгэн таны хамгийн тохиромжтой мэргэжлийг тодорхойлно.
-              </p>
-
-              {/* CTA buttons */}
-              <div className="flex flex-wrap gap-3 mb-12">
-                <Link
-                  href="/career-assessment"
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-accent text-primary font-bold rounded-xl hover:bg-accent/90 active:scale-[0.98] transition-all duration-150 card-shadow"
-                >
-                  Үнэлгээ эхлэх
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                    <path d="M3 8H13M9 4L13 8L9 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+              <div className="max-w-3xl">
+                {/* Badge */}
+                <div className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-accent/20 border border-accent/30 rounded-full text-accent text-xs font-semibold mb-6">
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
+                    <path d="M6 1L7.5 4.5L11 5L8.5 7.5L9 11L6 9.5L3 11L3.5 7.5L1 5L4.5 4.5L6 1Z" />
                   </svg>
-                </Link>
-                <Link
-                  href="/sign-up-login-screen"
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-white/10 border border-white/20 text-white font-semibold rounded-xl hover:bg-white/15 transition-all duration-150"
-                >
-                  Бүртгүүлэх
-                </Link>
+                  Монголын #1 Карьер удирдамжийн платформ
+                </div>
+
+                <h1 className="text-white font-bold leading-tight mb-5" style={{ fontSize: "clamp(2rem, 5vw, 3.25rem)" }}>
+                  Таны зам{" "}
+                  <span className="text-accent">энд эхэлнэ</span>
+                </h1>
+
+                <p className="text-white/70 text-lg leading-relaxed mb-6 max-w-xl">
+                  Мэргэжлээ сонгосон ч баталгаажуулах хэрэгтэй байна уу? Эсвэл яг юу болохоо мэдэхгүй байна уу? Эсвэл өөртөө итгэлгүй ч гэсэн гайхалтай авьяастай гэдгээ мэдрэх хэрэгтэй байна уу?
+                </p>
+
+                {/* Three-type pill indicators */}
+                <div className="flex flex-wrap gap-2 mb-8">
+                  <a href="#who-is-this-for" className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-500/20 border border-blue-400/30 rounded-full text-blue-200 text-xs font-medium hover:bg-blue-500/30 transition-colors cursor-pointer">
+                    🎯 Сонголтоо баталгаажуулах
+                  </a>
+                  <a href="#who-is-this-for" className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-amber-500/20 border border-amber-400/30 rounded-full text-amber-200 text-xs font-medium hover:bg-amber-500/30 transition-colors cursor-pointer">
+                    🧭 Чиглэл хайж байна
+                  </a>
+                  <a href="#who-is-this-for" className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-500/20 border border-emerald-400/30 rounded-full text-emerald-200 text-xs font-medium hover:bg-emerald-500/30 transition-colors cursor-pointer">
+                    💡 Нуугдмал авьяасаа нээх
+                  </a>
+                </div>
+
+                {/* CTA buttons */}
+                <div className="flex flex-wrap gap-3 mb-12">
+                  <Link
+                    href="/career-assessment"
+                    className="inline-flex items-center gap-2 px-6 py-3 bg-accent text-primary font-bold rounded-xl hover:bg-accent/90 active:scale-[0.98] transition-all duration-150 card-shadow"
+                  >
+                    Үнэлгээ эхлэх
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                      <path d="M3 8H13M9 4L13 8L9 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </Link>
+                  <Link
+                    href="/sign-up-login-screen"
+                    className="inline-flex items-center gap-2 px-6 py-3 bg-white/10 border border-white/20 text-white font-semibold rounded-xl hover:bg-white/15 transition-all duration-150"
+                  >
+                    Бүртгүүлэх
+                  </Link>
+                </div>
+
+                {/* Stats */}
+                <div className="flex flex-wrap gap-8">
+                  {STATS?.map((stat) => (
+                    <div key={`hero-stat-${stat?.label}`}>
+                      <div className="text-white font-bold text-2xl tabular-nums">{stat?.value}</div>
+                      <div className="text-white/50 text-xs mt-0.5">{stat?.label}</div>
+                    </div>
+                  ))}
+                </div>
               </div>
 
-              {/* Stats */}
-              <div className="flex flex-wrap gap-8">
-                {STATS?.map((stat) => (
-                  <div key={`hero-stat-${stat?.label}`}>
-                    <div className="text-white font-bold text-2xl tabular-nums">{stat?.value}</div>
-                    <div className="text-white/50 text-xs mt-0.5">{stat?.label}</div>
-                  </div>
-                ))}
-              </div>
             </div>
           </div>
         </section>
 
         {/* How it works */}
-        <section id="how-it-works" className="py-16 lg:py-20 bg-background">
+        <section id="how-it-works" className="py-16 lg:py-20 bg-secondary/40">
           <div className="max-w-screen-xl mx-auto px-4 lg:px-8">
             <div className="mb-10">
               <span className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Үйл явц</span>
@@ -260,7 +316,7 @@ export default function HomePageClient() {
               <p className="text-muted-foreground mt-2 max-w-lg">Дөнгөж 33 минутад таны карьерийн бүрэн профайл бэлэн болно</p>
             </div>
 
-            {/* Bento-style module cards — linked to assessment */}
+            {/* Bento-style module cards */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {MODULES?.map((mod, idx) => {
                 const status = mounted ? getModuleProgress(mod.moduleKey, completedModules) : "pending";
@@ -280,7 +336,6 @@ export default function HomePageClient() {
                     </div>
                     <p className="text-muted-foreground text-sm mb-3">{mod?.desc}</p>
 
-                    {/* Progress badge */}
                     <div className="mb-4">
                       <ProgressBadge status={status} />
                     </div>
@@ -302,7 +357,6 @@ export default function HomePageClient() {
                         <path d="M3 7H11M7.5 4L11 7L7.5 10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                       </svg>
                     </div>
-                    {/* Step number watermark */}
                     <div className="absolute top-4 right-5 text-6xl font-black text-muted/40 select-none leading-none">
                       {idx + 1}
                     </div>
@@ -311,7 +365,6 @@ export default function HomePageClient() {
               })}
             </div>
 
-            {/* Flow arrow */}
             <div className="mt-8 flex justify-center">
               <Link
                 href="/career-assessment"
@@ -327,7 +380,7 @@ export default function HomePageClient() {
         </section>
 
         {/* Results preview */}
-        <section className="py-16 lg:py-20 bg-secondary/40">
+        <section className="py-16 lg:py-20 bg-background">
           <div className="max-w-screen-xl mx-auto px-4 lg:px-8">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
               <div>
@@ -405,7 +458,7 @@ export default function HomePageClient() {
         </section>
 
         {/* Testimonials */}
-        <section id="testimonials" className="py-16 lg:py-20 bg-background">
+        <section id="testimonials" className="py-16 lg:py-20 bg-secondary/40">
           <div className="max-w-screen-xl mx-auto px-4 lg:px-8">
             <div className="mb-10">
               <span className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Сэтгэгдэл</span>
@@ -460,6 +513,7 @@ export default function HomePageClient() {
           </div>
         </section>
       </main>
+
       {/* Footer */}
       <footer className="bg-card border-t border-border py-6">
         <div className="max-w-screen-xl mx-auto px-4 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-3">

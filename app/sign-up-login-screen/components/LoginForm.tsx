@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -20,6 +20,14 @@ export default function LoginForm({
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+
+  // Detect redirect param (works on client after mount)
+  const [redirectTo, setRedirectTo] = React.useState<string | null>(null);
+  React.useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const r = params.get("redirect");
+    if (r === "results") setRedirectTo("/career-profile-recommendations");
+  }, []);
 
   const {
     register,
@@ -48,7 +56,7 @@ export default function LoginForm({
         toast.success("Амжилттай нэвтэрлээ! 🎉", {
           description: `Тавтай морилно уу, ${json.user?.firstName || json.user?.email}!`,
         });
-        router.push("/career-assessment");
+        router.push(redirectTo || "/career-assessment");
         router.refresh();
       }
     } catch {

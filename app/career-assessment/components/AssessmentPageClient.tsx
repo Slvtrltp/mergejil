@@ -127,7 +127,20 @@ export default function AssessmentPageClient() {
       // DB unavailable — results are already in localStorage, continue
     }
 
-    router.push("/career-profile-recommendations");
+    // Check if user is already authenticated
+    try {
+      const meRes = await fetch("/api/auth/me");
+      if (meRes.ok) {
+        // Already logged in — go straight to results
+        router.push("/career-profile-recommendations");
+        return;
+      }
+    } catch {
+      // ignore
+    }
+
+    // Not authenticated — redirect to sign-in with return destination
+    router.push("/sign-up-login-screen?redirect=results");
   };
 
   const getModuleIndex = () => {

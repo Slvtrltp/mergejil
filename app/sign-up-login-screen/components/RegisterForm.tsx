@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useWatch } from "react-hook-form";
 import { useRouter } from "next/navigation";
@@ -26,6 +26,14 @@ export default function RegisterForm({
   const [showConfirm, setShowConfirm] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+
+  // Detect redirect param (works on client after mount)
+  const [redirectTo, setRedirectTo] = React.useState<string | null>(null);
+  React.useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const r = params.get("redirect");
+    if (r === "results") setRedirectTo("/career-profile-recommendations");
+  }, []);
 
   const {
     register,
@@ -55,9 +63,9 @@ export default function RegisterForm({
         toast.error(json.error || "Бүртгэхэд алдаа гарлаа");
       } else {
         toast.success("Бүртгэл амжилттай! 🎉", {
-          description: `Тавтай морилно уу, ${data.firstName}! Одоо үнэлгээгээ эхэлцгээе.`,
+          description: `Тавтай морилно уу, ${data.firstName}! ${redirectTo ? "Таны үр дүн бэлэн байна." : "Одоо үнэлгээгээ эхэлцгээе."}`,
         });
-        router.push("/career-assessment");
+        router.push(redirectTo || "/career-assessment");
         router.refresh();
       }
     } catch {

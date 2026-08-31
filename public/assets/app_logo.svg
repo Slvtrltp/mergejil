@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+  <!-- Background Circle -->
+  <circle cx="200" cy="200" r="200" fill="#1a2744" />
+
+  <!-- Subtle Compass & Assessment Grid -->
+  <g stroke="#FFFFFF" stroke-opacity="0.05" fill="none" stroke-width="1">
+    <circle cx="200" cy="200" r="60" />
+    <circle cx="200" cy="200" r="100" />
+    <circle cx="200" cy="200" r="140" />
+    <line x1="200" y1="40" x2="200" y2="360" stroke-dasharray="4 4" />
+    <line x1="40" y1="200" x2="360" y2="200" stroke-dasharray="4 4" />
+  </g>
+
+  <!-- 3D Isometric Extrusion Faces -->
+  <g stroke-linejoin="round">
+    <!-- Up-facing faces (Lighter Gray for highlight) -->
+    <polygon points="113.83,118 176.17,226 207.34,208 145,100" fill="#E2E8F0" stroke="#E2E8F0" stroke-width="0.5" />
+    <polygon points="223.96,181.6 209.42,156.4 240.59,138.4 255.13,163.6" fill="#E2E8F0" stroke="#E2E8F0" stroke-width="0.5" />
+
+    <!-- Right-facing faces (Darker Gray for shadow) -->
+    <polygon points="209.42,206.8 209.42,293.2 240.59,275.2 240.59,188.8" fill="#C1C9D6" stroke="#C1C9D6" stroke-width="0.5" />
+    <polygon points="209.42,156.4 209.42,173.2 240.59,155.2 240.59,138.4" fill="#C1C9D6" stroke="#C1C9D6" stroke-width="0.5" />
+    <polygon points="142.92,134.8 142.92,254.8 174.09,236.8 174.09,116.8" fill="#C1C9D6" stroke="#C1C9D6" stroke-width="0.5" />
+
+    <!-- Golden Compass Needle / Arrowhead Extrusion (Dark Gold) -->
+    <polygon points="223.96,109.6 255.13,163.6 286.3,145.6 255.13,91.6" fill="#C78210" stroke="#C78210" stroke-width="0.5" />
+  </g>
+
+  <!-- Front Faces -->
+  <g stroke-linejoin="round">
+    <!-- White "M" Letterform -->
+    <polygon points="113.83,238 113.83,118 176.17,226 209.42,206.8 209.42,293.2 238.51,310 238.51,173.2 223.96,181.6 209.42,156.4 209.42,173.2 176.17,192.4 142.92,134.8 142.92,254.8" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="0.5" />
+
+    <!-- Golden Compass Needle / Arrowhead Front -->
+    <polygon points="223.96,109.6 255.13,163.6 223.96,181.6 192.79,127.6" fill="#F5A623" stroke="#F5A623" stroke-width="0.5" />
+  </g>
+
+  <!-- Top-Right Star Accent (Split for 3D effect) -->
+  <g stroke-linejoin="round">
+    <!-- Left half (Light) -->
+    <polygon points="310,64 306,76 294,80 306,84 310,96 310,80" fill="#F5A623" />
+    <!-- Right half (Shadow) -->
+    <polygon points="310,64 314,76 326,80 314,84 310,96 310,80" fill="#C78210" />
+  </g>
+</svg>

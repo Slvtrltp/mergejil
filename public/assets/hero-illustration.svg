@@ -1,0 +1,256 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="100%" height="100%">
+  <defs>
+    <!-- CSS Animations -->
+    <style><![CDATA[
+@keyframes float1 {
+        0%, 100% { transform: translate(650px, 120px) translateY(0px); }
+        50% { transform: translate(650px, 120px) translateY(-12px); }
+      }
+      @keyframes float2 {
+        0%, 100% { transform: translate(700px, 260px) translateY(0px); }
+        50% { transform: translate(700px, 260px) translateY(-16px); }
+      }
+      @keyframes float3 {
+        0%, 100% { transform: translate(650px, 420px) translateY(0px); }
+        50% { transform: translate(650px, 420px) translateY(-10px); }
+      }
+      @keyframes pulseGlow {
+        0%, 100% { opacity: 0.4; transform: scale(0.95); }
+        50% { opacity: 0.7; transform: scale(1.05); }
+      }
+      @keyframes flowData {
+        to { stroke-dashoffset: -60; }
+      }
+      @keyframes rotateSlow {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+      @keyframes particleFloat {
+        0%, 100% { transform: translateY(0px) scale(1); opacity: 0.5; }
+        50% { transform: translateY(-20px) scale(1.2); opacity: 1; }
+      }
+
+      .badge-1 { animation: float1 6s ease-in-out infinite; }
+      .badge-2 { animation: float2 7.5s ease-in-out infinite 1s; }
+      .badge-3 { animation: float3 5s ease-in-out infinite 2s; }
+      .core-glow { animation: pulseGlow 4s ease-in-out infinite alternate; transform-origin: 285px 340px; }
+      .bg-glow { animation: pulseGlow 6s ease-in-out infinite alternate; transform-origin: 285px 340px; }
+      .path-flow { animation: flowData 2s linear infinite; }
+      .path-flow-slow { animation: flowData 3s linear infinite; }
+      .spin-ring { animation: rotateSlow 20s linear infinite; transform-origin: center; }
+      
+      .particle-1 { animation: particleFloat 4s ease-in-out infinite; }
+      .particle-2 { animation: particleFloat 5s ease-in-out infinite 1.5s; }
+      .particle-3 { animation: particleFloat 6s ease-in-out infinite 0.5s; }
+]]></style>
+
+    <!-- Gradients -->
+    <radialGradient id="bgGlowGrad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#2d3f6b" stop-opacity="0.8" />
+      <stop offset="100%" stop-color="#1a2744" stop-opacity="0" />
+    </radialGradient>
+
+    <radialGradient id="coreGlowGrad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#F5A623" stop-opacity="1" />
+      <stop offset="50%" stop-color="#F5A623" stop-opacity="0.5" />
+      <stop offset="100%" stop-color="#F5A623" stop-opacity="0" />
+    </radialGradient>
+
+    <radialGradient id="vignette" cx="50%" cy="50%" r="75%">
+      <stop offset="50%" stop-color="#1a2744" stop-opacity="0" />
+      <stop offset="100%" stop-color="#0a1122" stop-opacity="0.8" />
+    </radialGradient>
+
+    <linearGradient id="pathGrad1" x1="285" y1="340" x2="650" y2="120" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#F5A623" stop-opacity="0" />
+      <stop offset="20%" stop-color="#F5A623" stop-opacity="0.8" />
+      <stop offset="100%" stop-color="#F5A623" stop-opacity="0.2" />
+    </linearGradient>
+
+    <linearGradient id="pathGrad2" x1="285" y1="340" x2="700" y2="260" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#F5A623" stop-opacity="0" />
+      <stop offset="30%" stop-color="#F5A623" stop-opacity="0.9" />
+      <stop offset="100%" stop-color="#F5A623" stop-opacity="0.3" />
+    </linearGradient>
+
+    <linearGradient id="pathGrad3" x1="285" y1="340" x2="650" y2="420" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#F5A623" stop-opacity="0" />
+      <stop offset="25%" stop-color="#F5A623" stop-opacity="0.7" />
+      <stop offset="100%" stop-color="#F5A623" stop-opacity="0.1" />
+    </linearGradient>
+
+    <linearGradient id="bodyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2d3f6b" stop-opacity="0.9" />
+      <stop offset="100%" stop-color="#1a2744" stop-opacity="0.9" />
+    </linearGradient>
+
+    <linearGradient id="badgeBase" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2d3f6b" stop-opacity="1" />
+      <stop offset="100%" stop-color="#1a2744" stop-opacity="1" />
+    </linearGradient>
+
+    <!-- Filters -->
+    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="6" result="blur1" />
+      <feGaussianBlur stdDeviation="12" result="blur2" />
+      <feMerge>
+        <feMergeNode in="blur2" />
+        <feMergeNode in="blur1" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+
+    <filter id="heavyGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="15" result="blur1" />
+      <feGaussianBlur stdDeviation="25" result="blur2" />
+      <feMerge>
+        <feMergeNode in="blur2" />
+        <feMergeNode in="blur1" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+
+    <filter id="dropShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="6" flood-color="#0a1122" flood-opacity="0.6" />
+    </filter>
+
+    <!-- Patterns -->
+    <pattern id="dotGrid" x="0" y="0" width="30" height="30" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1.5" fill="#2d3f6b" opacity="0.4" />
+    </pattern>
+  </defs>
+
+  <!-- ================= BACKGROUND ================= -->
+  <rect width="100%" height="100%" fill="#1a2744" />
+  <rect width="100%" height="100%" fill="url(#dotGrid)" />
+  
+  <!-- Radial Background Glow -->
+  <circle cx="285" cy="340" r="350" fill="url(#bgGlowGrad)" class="bg-glow" />
+
+  <!-- Abstract Geometric Atmosphere -->
+  <g stroke="#2d3f6b" stroke-width="1" fill="none" opacity="0.5">
+    <circle cx="285" cy="340" r="150" stroke-dasharray="4 8" />
+    <circle cx="285" cy="340" r="250" stroke-dasharray="2 6" />
+    <circle cx="285" cy="340" r="350" stroke-dasharray="8 12" />
+    <path d="M 0 340 L 800 340" stroke-dasharray="2 10" opacity="0.3" />
+    <path d="M 285 0 L 285 500" stroke-dasharray="2 10" opacity="0.3" />
+  </g>
+
+  <!-- ================= PATHS (CROSSROADS) ================= -->
+  <g id="paths" fill="none" stroke-linecap="round">
+    <!-- Path 1: Top Right -->
+    <path id="p1-base" d="M 285 340 C 350 180, 480 120, 650 120" stroke="url(#pathGrad1)" stroke-width="8" filter="url(#glow)" />
+    <path d="M 285 340 C 350 180, 480 120, 650 120" stroke="#FFFFFF" stroke-width="2" stroke-dasharray="8 16" class="path-flow" opacity="0.9" />
+    
+    <!-- Path 2: Middle Right -->
+    <path id="p2-base" d="M 285 340 C 400 340, 500 260, 700 260" stroke="url(#pathGrad2)" stroke-width="10" filter="url(#glow)" />
+    <path d="M 285 340 C 400 340, 500 260, 700 260" stroke="#F5A623" stroke-width="3" stroke-dasharray="12 24" class="path-flow-slow" opacity="1" />
+    <path d="M 285 340 C 400 340, 500 260, 700 260" stroke="#FFFFFF" stroke-width="1" stroke-dasharray="4 8" class="path-flow" opacity="0.8" />
+
+    <!-- Path 3: Bottom Right -->
+    <path id="p3-base" d="M 285 340 C 380 450, 500 420, 650 420" stroke="url(#pathGrad3)" stroke-width="8" filter="url(#glow)" />
+    <path d="M 285 340 C 380 450, 500 420, 650 420" stroke="#FFFFFF" stroke-width="2" stroke-dasharray="6 12" class="path-flow" opacity="0.7" />
+  </g>
+
+  <!-- ================= FIGURE (SILHOUETTE) ================= -->
+  <g id="figure">
+    <!-- Abstract Body -->
+    <path d="M 200 500 C 200 400, 230 330, 285 310 C 340 330, 370 400, 370 500 Z" fill="url(#bodyGrad)" stroke="#2d3f6b" stroke-width="2" />
+    
+    <!-- Geometric Facets for Depth -->
+    <path d="M 285 310 L 370 500 L 285 500 Z" fill="#FFFFFF" opacity="0.03" />
+    <path d="M 285 310 L 200 500 L 285 500 Z" fill="#1a2744" opacity="0.3" />
+    <path d="M 285 310 C 310 350, 320 420, 320 500 L 285 500 Z" fill="#F5A623" opacity="0.05" />
+    
+    <!-- Abstract Head -->
+    <circle cx="285" cy="230" r="32" fill="url(#bodyGrad)" stroke="#2d3f6b" stroke-width="2" />
+    <circle cx="285" cy="230" r="24" fill="#1a2744" />
+    
+    <!-- Head Tech Rings -->
+    <g transform="translate(285, 230)">
+      <circle cx="0" cy="0" r="45" fill="none" stroke="#F5A623" stroke-width="1" stroke-dasharray="2 6" opacity="0.6" class="spin-ring" />
+      <circle cx="0" cy="0" r="55" fill="none" stroke="#FFFFFF" stroke-width="1" stroke-dasharray="10 20" opacity="0.3" class="spin-ring" style="animation-direction: reverse; animation-duration: 25s;" />
+      <!-- Mind Node -->
+      <circle cx="0" cy="0" r="6" fill="#FFFFFF" filter="url(#glow)" />
+    </g>
+
+    <!-- Core/Heart Node (Origin of Paths) -->
+    <circle cx="285" cy="340" r="25" fill="url(#coreGlowGrad)" class="core-glow" filter="url(#heavyGlow)" />
+    <circle cx="285" cy="340" r="8" fill="#FFFFFF" filter="url(#glow)" />
+    <circle cx="285" cy="340" r="4" fill="#F5A623" />
+    
+    <!-- Connection Line Mind to Core -->
+    <path d="M 285 236 L 285 332" stroke="#FFFFFF" stroke-width="2" stroke-dasharray="4 4" opacity="0.6" />
+  </g>
+
+  <!-- ================= FLOATING BADGES ================= -->
+  
+  <!-- Badge 1: Brain (Top Path) -->
+  <g class="badge-1" filter="url(#dropShadow)">
+    <!-- Outer Rings -->
+    <circle cx="0" cy="0" r="42" fill="url(#badgeBase)" stroke="#F5A623" stroke-width="3" filter="url(#glow)" />
+    <circle cx="0" cy="0" r="34" fill="none" stroke="#FFFFFF" stroke-width="1" stroke-dasharray="3 6" opacity="0.5" class="spin-ring" />
+    <circle cx="0" cy="0" r="28" fill="#1a2744" />
+    <!-- Brain Icon -->
+    <g transform="translate(0, 0)" stroke="#F5A623" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M -2 -12 C -10 -12, -14 -4, -12 4 C -14 10, -8 14, -2 14 L -2 -12" />
+      <path d="M 2 -12 C 10 -12, 14 -4, 12 4 C 14 10, 8 14, 2 14 L 2 -12" />
+      <path d="M -7 -4 Q -2 -8, -2 -2" stroke="#FFFFFF" stroke-width="1.5" />
+      <path d="M 7 -4 Q 2 -8, 2 -2" stroke="#FFFFFF" stroke-width="1.5" />
+      <circle cx="-6" cy="6" r="1.5" fill="#FFFFFF" stroke="none" />
+      <circle cx="6" cy="6" r="1.5" fill="#FFFFFF" stroke="none" />
+    </g>
+  </g>
+
+  <!-- Badge 2: Star (Middle Path) -->
+  <g class="badge-2" filter="url(#dropShadow)">
+    <!-- Outer Rings -->
+    <circle cx="0" cy="0" r="48" fill="url(#badgeBase)" stroke="#F5A623" stroke-width="4" filter="url(#glow)" />
+    <circle cx="0" cy="0" r="38" fill="none" stroke="#FFFFFF" stroke-width="1.5" stroke-dasharray="4 8" opacity="0.6" class="spin-ring" style="animation-direction: reverse;" />
+    <circle cx="0" cy="0" r="32" fill="#1a2744" />
+    <!-- Star Icon -->
+    <g transform="translate(0, 0)">
+      <path d="M 0 -14 L 4 -4 L 14 -3 L 6 4 L 8 14 L 0 9 L -8 14 L -6 4 L -14 -3 L -4 -4 Z" fill="none" stroke="#F5A623" stroke-width="2.5" stroke-linejoin="round" />
+      <polygon points="0,-7 2,-2 7,-1.5 3,2 4,7 0,4.5 -4,7 -3,2 -7,-1.5 -2,-2" fill="#FFFFFF" filter="url(#glow)" />
+    </g>
+  </g>
+
+  <!-- Badge 3: Checkmark (Bottom Path) -->
+  <g class="badge-3" filter="url(#dropShadow)">
+    <!-- Outer Rings -->
+    <circle cx="0" cy="0" r="40" fill="url(#badgeBase)" stroke="#F5A623" stroke-width="3" filter="url(#glow)" />
+    <circle cx="0" cy="0" r="32" fill="none" stroke="#FFFFFF" stroke-width="1" stroke-dasharray="2 4" opacity="0.5" class="spin-ring" />
+    <circle cx="0" cy="0" r="26" fill="#1a2744" />
+    <!-- Checkmark Icon -->
+    <g transform="translate(0, 0)">
+      <path d="M -10 2 L -3 9 L 12 -6" fill="none" stroke="#F5A623" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)" />
+      <path d="M -10 2 L -3 9 L 12 -6" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+
+  <!-- ================= FOREGROUND ACCENTS & PARTICLES ================= -->
+  <g fill="#FFFFFF" opacity="0.8">
+    <!-- Path 1 Nodes -->
+    <circle cx="440" cy="180" r="3" class="particle-1" filter="url(#glow)" />
+    <polygon points="530,125 533,130 530,135 527,130" fill="#F5A623" class="particle-2" />
+    
+    <!-- Path 2 Nodes -->
+    <circle cx="450" cy="315" r="4" class="particle-3" filter="url(#glow)" />
+    <circle cx="580" cy="275" r="2.5" class="particle-1" />
+    <polygon points="630,240 634,245 630,250 626,245" fill="#F5A623" class="particle-2" filter="url(#glow)" />
+
+    <!-- Path 3 Nodes -->
+    <circle cx="450" cy="425" r="3" class="particle-2" filter="url(#glow)" />
+    <polygon points="550,420 553,425 550,430 547,425" fill="#F5A623" class="particle-3" />
+    
+    <!-- Ambient Particles -->
+    <circle cx="150" cy="150" r="2" class="particle-1" opacity="0.3" />
+    <circle cx="700" cy="100" r="1.5" class="particle-3" opacity="0.4" />
+    <circle cx="750" cy="400" r="2.5" class="particle-2" opacity="0.2" />
+    <circle cx="100" cy="400" r="2" class="particle-1" opacity="0.5" />
+  </g>
+
+  <!-- ================= OVERLAY VIGNETTE ================= -->
+  <rect width="100%" height="100%" fill="url(#vignette)" pointer-events="none" />
+
+</svg>
